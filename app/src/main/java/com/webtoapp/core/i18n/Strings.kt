@@ -1160,6 +1160,17 @@ object Strings {
     val packageNameHint: String get() = StringsB.packageNameHint
     val apkPackageNamePlaceholder: String get() = StringsB.apkPackageNamePlaceholder
     val apkConfigNote: String get() = StringsB.apkConfigNote
+    val monochromeIconTitle: String get() = StringsB.monochromeIconTitle
+    val monochromeIconHint: String get() = StringsB.monochromeIconHint
+    val monochromeIconAutoSource: String get() = StringsB.monochromeIconAutoSource
+    val monochromeIconCustomSvgSource: String get() = StringsB.monochromeIconCustomSvgSource
+    val monochromeIconImportSvg: String get() = StringsB.monochromeIconImportSvg
+    val monochromeIconClearSvg: String get() = StringsB.monochromeIconClearSvg
+    val monochromeIconThreshold: String get() = StringsB.monochromeIconThreshold
+    val monochromeIconThresholdHint: String get() = StringsB.monochromeIconThresholdHint
+    val monochromeIconInvert: String get() = StringsB.monochromeIconInvert
+    val monochromeIconInvertHint: String get() = StringsB.monochromeIconInvertHint
+    val monochromeIconInvalidSvg: String get() = StringsB.monochromeIconInvalidSvg
     val versionName: String get() = StringsB.versionName
     val apkVersionNamePlaceholder: String get() = StringsB.apkVersionNamePlaceholder
     val versionCode: String get() = StringsB.versionCode
