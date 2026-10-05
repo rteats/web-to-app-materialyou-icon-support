@@ -1286,6 +1286,18 @@ enum class ApkArchitecture(
     }
 }
 
+data class MonochromeIconConfig(
+    /** Optional app-private SVG file. Null means derive the mask from the normal launcher icon. */
+    val svgPath: String? = null,
+    /**
+     * Automatic conversion threshold in the 0..255 range. For opaque icons this is colour
+     * distance from the detected border background; for transparent icons it is alpha.
+     */
+    val threshold: Int = 64,
+    /** Swap foreground/background classification for unusual favicon artwork. */
+    val invert: Boolean = false
+)
+
 data class ApkExportConfig(
     val customPackageName: String? = null,
     val customVersionName: String? = null,
@@ -1343,7 +1355,13 @@ data class ApkExportConfig(
      * cost of a downgrade install failing on devices that already have a higher
      * versionCode. Build-invocation only; never serialized into the shell config.
      */
-    val autoVersionBump: Boolean = true
+    val autoVersionBump: Boolean = true,
+
+    /**
+     * Host-side launcher themed-icon settings. These are consumed by ApkBuilder and are not
+     * serialized into the generated runtime config.
+     */
+    val monochromeIconConfig: MonochromeIconConfig = MonochromeIconConfig()
 )
 
 data class NetworkTrustConfig(

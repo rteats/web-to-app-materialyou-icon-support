@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.webtoapp.core.i18n.Strings
+import com.webtoapp.core.apkbuilder.MonochromeIconProcessor
 import com.webtoapp.ui.theme.LocalShowDescriptions
 import com.webtoapp.ui.theme.ifDescriptionsShown
 import com.webtoapp.data.model.*
@@ -38,6 +39,7 @@ import com.webtoapp.util.NetworkTrustStorage
 import com.webtoapp.util.SavedNetworkTrustPreset
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import java.io.File
 
 private val PACKAGE_NAME_REGEX = AppConstants.PACKAGE_NAME_REGEX
 
@@ -80,6 +82,28 @@ fun ApkExportSection(
                 NetworkTrustStorage.InvalidReason.PRIVATE_KEY -> Strings.invalidCertificatePrivateKey
                 NetworkTrustStorage.InvalidReason.UNRECOGNIZED -> Strings.invalidCertificateUnrecognized
                 null -> error.message ?: Strings.invalidCertificate
+            }
+        }
+    }
+
+    var monochromeSvgImportError by remember { mutableStateOf(false) }
+    val monochromeSvgPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        coroutineScope.launch {
+            val imported = withContext(Dispatchers.IO) {
+                MonochromeIconProcessor.importSvg(context, uri)
+            }
+            if (imported != null) {
+                monochromeSvgImportError = false
+                onConfigChange(
+                    config.copy(
+                        monochromeIconConfig = config.monochromeIconConfig.copy(svgPath = imported)
+                    )
+                )
+            } else {
+                monochromeSvgImportError = true
             }
         }
     }
@@ -313,6 +337,140 @@ fun ApkExportSection(
                         config = config,
                         onConfigChange = onConfigChange
                     )
+                }
+            }
+        }
+
+        WtaSection(
+            title = Strings.monochromeIconTitle,
+            headerStyle = WtaSectionHeaderStyle.Quiet,
+            collapsible = true,
+            initiallyExpanded = false
+        ) {
+            val mono = config.monochromeIconConfig
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = WtaSpacing.RowHorizontal,
+                        vertical = WtaSpacing.ContentGap
+                    ),
+                verticalArrangement = Arrangement.spacedBy(WtaSpacing.ContentGap)
+            ) {
+                if (LocalShowDescriptions.current) {
+                    Text(
+                        text = Strings.monochromeIconHint,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                Text(
+                    text = if (mono.svgPath.isNullOrBlank()) {
+                        Strings.monochromeIconAutoSource
+                    } else {
+                        "${Strings.monochromeIconCustomSvgSource}: ${File(mono.svgPath).name}"
+                    },
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    FilledTonalButton(
+                        onClick = {
+                            monochromeSvgPickerLauncher.launch(
+                                arrayOf("image/svg+xml", "text/xml", "application/xml")
+                            )
+                        }
+                    ) {
+                        Icon(Icons.Outlined.FileOpen, contentDescription = null)
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(Strings.monochromeIconImportSvg)
+                    }
+
+                    if (!mono.svgPath.isNullOrBlank()) {
+                        TextButton(
+                            onClick = {
+                                monochromeSvgImportError = false
+                                onConfigChange(
+                                    config.copy(
+                                        monochromeIconConfig = mono.copy(svgPath = null)
+                                    )
+                                )
+                            }
+                        ) {
+                            Text(Strings.monochromeIconClearSvg)
+                        }
+                    }
+                }
+
+                if (monochromeSvgImportError) {
+                    Text(
+                        text = Strings.monochromeIconInvalidSvg,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+                if (mono.svgPath.isNullOrBlank()) {
+                    Text(
+                        text = "${Strings.monochromeIconThreshold}: ${mono.threshold}",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                    Slider(
+                        value = mono.threshold.toFloat(),
+                        onValueChange = { value ->
+                            onConfigChange(
+                                config.copy(
+                                    monochromeIconConfig = mono.copy(
+                                        threshold = value.toInt().coerceIn(0, 255)
+                                    )
+                                )
+                            )
+                        },
+                        valueRange = 0f..255f,
+                        steps = 254
+                    )
+                    if (LocalShowDescriptions.current) {
+                        Text(
+                            text = Strings.monochromeIconThresholdHint,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = Strings.monochromeIconInvert,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            if (LocalShowDescriptions.current) {
+                                Text(
+                                    text = Strings.monochromeIconInvertHint,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        Switch(
+                            checked = mono.invert,
+                            onCheckedChange = {
+                                onConfigChange(
+                                    config.copy(
+                                        monochromeIconConfig = mono.copy(invert = it)
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

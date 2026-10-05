@@ -26,6 +26,7 @@ import com.webtoapp.data.model.LrcData
 import com.webtoapp.data.model.AnnouncementTemplateType
 import com.webtoapp.data.model.HtmlLoadMode
 import com.webtoapp.data.model.WebApp
+import com.webtoapp.data.model.MonochromeIconConfig
 import com.webtoapp.data.model.withRuntimePermissionsSyncedFromFeatures
 import com.webtoapp.data.model.getActivationCodeStrings
 import com.webtoapp.ui.components.announcement.toUiTemplate
@@ -994,6 +995,7 @@ class ApkBuilder(private val context: Context) {
                             outputApk = unsignedApk,
                             config = config,
                             iconPath = webApp.iconPath,
+                            monochromeIconConfig = webApp.apkExportConfig?.monochromeIconConfig ?: MonochromeIconConfig(),
                             splashMediaPath = webApp.getSplashMediaPath(),
                             mediaContentPath = mediaContentPath,
                             bgmPlaylistPaths = bgmPlaylistPaths,
@@ -1037,6 +1039,7 @@ class ApkBuilder(private val context: Context) {
                             outputApk = unsignedApk,
                             config = config,
                             iconPath = webApp.iconPath,
+                            monochromeIconConfig = webApp.apkExportConfig?.monochromeIconConfig ?: MonochromeIconConfig(),
                             splashMediaPath = webApp.getSplashMediaPath(),
                             mediaContentPath = mediaContentPath,
                             bgmPlaylistPaths = bgmPlaylistPaths,
@@ -1083,6 +1086,7 @@ class ApkBuilder(private val context: Context) {
                         outputApk = unsignedApk,
                         config = config,
                         iconPath = webApp.iconPath,
+                        monochromeIconConfig = webApp.apkExportConfig?.monochromeIconConfig ?: MonochromeIconConfig(),
                         splashMediaPath = webApp.getSplashMediaPath(),
                         mediaContentPath = mediaContentPath,
                         bgmPlaylistPaths = bgmPlaylistPaths,
@@ -1432,6 +1436,7 @@ class ApkBuilder(private val context: Context) {
         outputApk: File,
         config: ApkConfig,
         iconPath: String?,
+        monochromeIconConfig: MonochromeIconConfig = MonochromeIconConfig(),
         splashMediaPath: String?,
         mediaContentPath: String? = null,
         bgmPlaylistPaths: List<String> = emptyList(),
@@ -1670,6 +1675,12 @@ class ApkBuilder(private val context: Context) {
                             val iconBytes = when (spec?.kind) {
                                 ArscRebuilder.LauncherIconKind.FOREGROUND ->
                                     template.createAdaptiveForegroundIcon(iconBitmap, ADAPTIVE_ICON_PX)
+                                ArscRebuilder.LauncherIconKind.MONOCHROME ->
+                                    MonochromeIconProcessor.createMonochromePng(
+                                        iconBitmap,
+                                        monochromeIconConfig,
+                                        ADAPTIVE_ICON_PX
+                                    )
                                 ArscRebuilder.LauncherIconKind.ROUND ->
                                     template.createRoundIcon(iconBitmap, iconPixelSizeForDensity(spec.densityDpi))
                                 ArscRebuilder.LauncherIconKind.LAUNCHER ->

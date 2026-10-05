@@ -1294,6 +1294,149 @@ object StringsB {
         AppLanguage.KOREAN -> "다음 설정은 APK 빌드 시에만 적용됩니다"
     }
 
+    val monochromeIconTitle: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "主题单色图标"
+        AppLanguage.ENGLISH -> "Themed monochrome icon"
+        AppLanguage.ARABIC -> "الأيقونة أحادية اللون ذات السمة"
+        AppLanguage.PORTUGUESE -> "Ícone monocromático temático"
+        AppLanguage.SPANISH -> "Icono monocromático temático"
+        AppLanguage.FRENCH -> "Icône monochrome thématique"
+        AppLanguage.GERMAN -> "Thematisches Monochrom-Symbol"
+        AppLanguage.RUSSIAN -> "Монохромная тематическая иконка"
+        AppLanguage.JAPANESE -> "テーマ対応モノクロアイコン"
+        AppLanguage.KOREAN -> "테마 단색 아이콘"
+    }
+
+    val monochromeIconHint: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "用于 Android 13+ 主题图标。默认从应用图标或网站 favicon 自动生成，也可导入 SVG。"
+        AppLanguage.ENGLISH -> "Used by Android 13+ themed icons. It is generated from the app icon/favicon by default, or you can import an SVG."
+        AppLanguage.ARABIC -> "تستخدمها الأيقونات ذات السمة في Android 13+. يتم إنشاؤها افتراضيًا من أيقونة التطبيق أو favicon، أو يمكنك استيراد SVG."
+        AppLanguage.PORTUGUESE -> "Usado pelos ícones temáticos do Android 13+. É gerado do ícone/favicon por padrão, ou você pode importar um SVG."
+        AppLanguage.SPANISH -> "Usado por los iconos temáticos de Android 13+. Se genera del icono/favicon de forma predeterminada, o puedes importar un SVG."
+        AppLanguage.FRENCH -> "Utilisé par les icônes thématiques d'Android 13+. Généré depuis l'icône/favicon par défaut, ou importez un SVG."
+        AppLanguage.GERMAN -> "Für thematische Symbole ab Android 13. Standardmäßig aus App-Symbol/Favicon erzeugt; alternativ kann eine SVG importiert werden."
+        AppLanguage.RUSSIAN -> "Используется для тематических иконок Android 13+. По умолчанию создаётся из иконки приложения/favicon; можно импортировать SVG."
+        AppLanguage.JAPANESE -> "Android 13 以降のテーマアイコンで使用します。既定ではアプリアイコン/favicon から生成し、SVG も読み込めます。"
+        AppLanguage.KOREAN -> "Android 13+ 테마 아이콘에 사용됩니다. 기본적으로 앱 아이콘/favicon에서 생성하며 SVG를 가져올 수도 있습니다."
+    }
+
+    val monochromeIconAutoSource: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "自动：使用应用图标 / favicon"
+        AppLanguage.ENGLISH -> "Automatic: app icon / favicon"
+        AppLanguage.ARABIC -> "تلقائي: أيقونة التطبيق / favicon"
+        AppLanguage.PORTUGUESE -> "Automático: ícone do app / favicon"
+        AppLanguage.SPANISH -> "Automático: icono de la app / favicon"
+        AppLanguage.FRENCH -> "Automatique : icône de l'app / favicon"
+        AppLanguage.GERMAN -> "Automatisch: App-Symbol / Favicon"
+        AppLanguage.RUSSIAN -> "Авто: иконка приложения / favicon"
+        AppLanguage.JAPANESE -> "自動：アプリアイコン / favicon"
+        AppLanguage.KOREAN -> "자동: 앱 아이콘 / favicon"
+    }
+
+    val monochromeIconCustomSvgSource: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "自定义 SVG"
+        AppLanguage.ENGLISH -> "Custom SVG"
+        AppLanguage.ARABIC -> "SVG مخصص"
+        AppLanguage.PORTUGUESE -> "SVG personalizado"
+        AppLanguage.SPANISH -> "SVG personalizado"
+        AppLanguage.FRENCH -> "SVG personnalisé"
+        AppLanguage.GERMAN -> "Benutzerdefinierte SVG"
+        AppLanguage.RUSSIAN -> "Пользовательский SVG"
+        AppLanguage.JAPANESE -> "カスタム SVG"
+        AppLanguage.KOREAN -> "사용자 지정 SVG"
+    }
+
+    val monochromeIconImportSvg: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "导入 SVG"
+        AppLanguage.ENGLISH -> "Import SVG"
+        AppLanguage.ARABIC -> "استيراد SVG"
+        AppLanguage.PORTUGUESE -> "Importar SVG"
+        AppLanguage.SPANISH -> "Importar SVG"
+        AppLanguage.FRENCH -> "Importer un SVG"
+        AppLanguage.GERMAN -> "SVG importieren"
+        AppLanguage.RUSSIAN -> "Импортировать SVG"
+        AppLanguage.JAPANESE -> "SVG を読み込む"
+        AppLanguage.KOREAN -> "SVG 가져오기"
+    }
+
+    val monochromeIconClearSvg: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "使用自动生成"
+        AppLanguage.ENGLISH -> "Use automatic"
+        AppLanguage.ARABIC -> "استخدام التلقائي"
+        AppLanguage.PORTUGUESE -> "Usar automático"
+        AppLanguage.SPANISH -> "Usar automático"
+        AppLanguage.FRENCH -> "Utiliser l'automatique"
+        AppLanguage.GERMAN -> "Automatisch verwenden"
+        AppLanguage.RUSSIAN -> "Использовать авто"
+        AppLanguage.JAPANESE -> "自動生成を使用"
+        AppLanguage.KOREAN -> "자동 생성 사용"
+    }
+
+    val monochromeIconThreshold: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "对比度阈值"
+        AppLanguage.ENGLISH -> "Contrast threshold"
+        AppLanguage.ARABIC -> "عتبة التباين"
+        AppLanguage.PORTUGUESE -> "Limite de contraste"
+        AppLanguage.SPANISH -> "Umbral de contraste"
+        AppLanguage.FRENCH -> "Seuil de contraste"
+        AppLanguage.GERMAN -> "Kontrastschwelle"
+        AppLanguage.RUSSIAN -> "Порог контраста"
+        AppLanguage.JAPANESE -> "コントラストしきい値"
+        AppLanguage.KOREAN -> "대비 임계값"
+    }
+
+    val monochromeIconThresholdHint: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "数值越高，自动转换保留的区域越少。"
+        AppLanguage.ENGLISH -> "Higher values keep less of the automatically converted image."
+        AppLanguage.ARABIC -> "القيم الأعلى تحتفظ بمساحة أقل من الصورة المحولة تلقائيًا."
+        AppLanguage.PORTUGUESE -> "Valores maiores mantêm menos da imagem convertida automaticamente."
+        AppLanguage.SPANISH -> "Los valores altos conservan menos de la imagen convertida automáticamente."
+        AppLanguage.FRENCH -> "Une valeur élevée conserve moins de l'image convertie automatiquement."
+        AppLanguage.GERMAN -> "Höhere Werte behalten weniger vom automatisch konvertierten Bild."
+        AppLanguage.RUSSIAN -> "Чем выше значение, тем меньше областей останется после автоконвертации."
+        AppLanguage.JAPANESE -> "値を高くすると、自動変換で残る領域が少なくなります。"
+        AppLanguage.KOREAN -> "값이 높을수록 자동 변환 이미지에서 남는 영역이 줄어듭니다."
+    }
+
+    val monochromeIconInvert: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "反转前景"
+        AppLanguage.ENGLISH -> "Invert foreground"
+        AppLanguage.ARABIC -> "عكس المقدمة"
+        AppLanguage.PORTUGUESE -> "Inverter primeiro plano"
+        AppLanguage.SPANISH -> "Invertir primer plano"
+        AppLanguage.FRENCH -> "Inverser le premier plan"
+        AppLanguage.GERMAN -> "Vordergrund umkehren"
+        AppLanguage.RUSSIAN -> "Инвертировать передний план"
+        AppLanguage.JAPANESE -> "前景を反転"
+        AppLanguage.KOREAN -> "전경 반전"
+    }
+
+    val monochromeIconInvertHint: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "当网站图标的背景比标志更显眼时使用。"
+        AppLanguage.ENGLISH -> "Use when the favicon background is detected as the subject instead of the logo."
+        AppLanguage.ARABIC -> "استخدمه عندما يتم اكتشاف خلفية favicon كموضوع بدلًا من الشعار."
+        AppLanguage.PORTUGUESE -> "Use quando o fundo do favicon for detectado como o assunto em vez do logotipo."
+        AppLanguage.SPANISH -> "Úsalo cuando el fondo del favicon se detecte como sujeto en lugar del logotipo."
+        AppLanguage.FRENCH -> "À utiliser si l'arrière-plan du favicon est détecté comme sujet au lieu du logo."
+        AppLanguage.GERMAN -> "Verwenden, wenn der Favicon-Hintergrund statt des Logos als Motiv erkannt wird."
+        AppLanguage.RUSSIAN -> "Используйте, если фон favicon определяется как объект вместо логотипа."
+        AppLanguage.JAPANESE -> "favicon の背景がロゴではなく前景として検出される場合に使用します。"
+        AppLanguage.KOREAN -> "favicon 배경이 로고 대신 전경으로 감지될 때 사용합니다."
+    }
+
+    val monochromeIconInvalidSvg: String get() = when (Strings.lang) {
+        AppLanguage.CHINESE -> "无法解析此 SVG。请使用仅包含矢量路径/形状且不含脚本或嵌入图像的 SVG。"
+        AppLanguage.ENGLISH -> "Could not parse this SVG. Use a vector-only SVG with paths/shapes and no scripts or embedded images."
+        AppLanguage.ARABIC -> "تعذر تحليل SVG. استخدم SVG متجهيًا فقط بمسارات/أشكال وبدون نصوص برمجية أو صور مضمنة."
+        AppLanguage.PORTUGUESE -> "Não foi possível analisar este SVG. Use um SVG vetorial com caminhos/formas, sem scripts ou imagens incorporadas."
+        AppLanguage.SPANISH -> "No se pudo analizar este SVG. Usa un SVG vectorial con trazados/formas, sin scripts ni imágenes incrustadas."
+        AppLanguage.FRENCH -> "Impossible d'analyser ce SVG. Utilisez un SVG vectoriel avec des tracés/formes, sans script ni image intégrée."
+        AppLanguage.GERMAN -> "Diese SVG konnte nicht verarbeitet werden. Verwenden Sie eine reine Vektor-SVG mit Pfaden/Formen ohne Skripte oder eingebettete Bilder."
+        AppLanguage.RUSSIAN -> "Не удалось разобрать SVG. Используйте векторный SVG с path/фигурами, без скриптов и встроенных изображений."
+        AppLanguage.JAPANESE -> "この SVG を解析できません。パス/図形のみで、スクリプトや埋め込み画像を含まない SVG を使用してください。"
+        AppLanguage.KOREAN -> "이 SVG를 해석할 수 없습니다. 스크립트나 포함 이미지 없이 경로/도형만 있는 벡터 SVG를 사용하세요."
+    }
+
     val versionName: String get() = when (Strings.lang) {
         AppLanguage.CHINESE -> "版本名"
         AppLanguage.ENGLISH -> "Version Name"

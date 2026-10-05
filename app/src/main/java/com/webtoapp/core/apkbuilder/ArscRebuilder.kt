@@ -18,7 +18,7 @@ class ArscRebuilder {
         const val LAUNCHER_BACKGROUND_DRAWABLE_PATH = "res/ic_launcher_bg.png"
     }
 
-    enum class LauncherIconKind { FOREGROUND, LAUNCHER, ROUND }
+    enum class LauncherIconKind { FOREGROUND, MONOCHROME, LAUNCHER, ROUND }
 
     data class DiscoveredIconPath(val path: String, val kind: LauncherIconKind, val densityDpi: Int)
 
@@ -339,9 +339,10 @@ class ArscRebuilder {
             val icLauncherKeyIdx = keyStrings.indexOf("ic_launcher")
             val icLauncherRoundKeyIdx = keyStrings.indexOf("ic_launcher_round")
             val icLauncherFgKeyIdx = keyStrings.indexOf("ic_launcher_foreground")
+            val icLauncherMonoKeyIdx = keyStrings.indexOf("ic_launcher_monochrome")
 
             AppLogger.d(TAG, "mipmapTypeId=$mipmapTypeId, drawableTypeId=$drawableTypeId")
-            AppLogger.d(TAG, "keyIndices: ic_launcher=$icLauncherKeyIdx, round=$icLauncherRoundKeyIdx, foreground=$icLauncherFgKeyIdx")
+            AppLogger.d(TAG, "keyIndices: ic_launcher=$icLauncherKeyIdx, round=$icLauncherRoundKeyIdx, foreground=$icLauncherFgKeyIdx, monochrome=$icLauncherMonoKeyIdx")
 
             if (mipmapTypeId <= 0 && drawableTypeId <= 0) {
                 AppLogger.w(TAG, "mipmap/drawable types not found in package")
@@ -391,7 +392,7 @@ class ArscRebuilder {
 
                     if (isInteresting) {
 
-                        for (targetIdx in listOf(icLauncherKeyIdx, icLauncherRoundKeyIdx, icLauncherFgKeyIdx)) {
+                        for (targetIdx in listOf(icLauncherKeyIdx, icLauncherRoundKeyIdx, icLauncherFgKeyIdx, icLauncherMonoKeyIdx)) {
                             if (targetIdx >= 0 && targetIdx < entryCount) {
                                 val offset = entryOffsets[targetIdx]
                                 AppLogger.d(TAG, "  Target key $targetIdx offset in entry table: $offset (entryIdx maps to keyIdx)")
@@ -412,7 +413,7 @@ class ArscRebuilder {
 
                         val isComplex = (entryFlags and 0x0001) != 0
                         if (isComplex) {
-                            if (isInteresting && (entryKeyIndex == icLauncherKeyIdx || entryKeyIndex == icLauncherRoundKeyIdx || entryKeyIndex == icLauncherFgKeyIdx)) {
+                            if (isInteresting && (entryKeyIndex == icLauncherKeyIdx || entryKeyIndex == icLauncherRoundKeyIdx || entryKeyIndex == icLauncherFgKeyIdx || entryKeyIndex == icLauncherMonoKeyIdx)) {
                                 AppLogger.d(TAG, "  Entry $entryIdx: keyIndex=$entryKeyIndex is COMPLEX (bag/map), skipping")
                             }
                             continue
@@ -424,7 +425,7 @@ class ArscRebuilder {
                         val valueType = buf.get().toInt() and 0xFF
                         val valueData = buf.int
 
-                        if (isInteresting && (entryKeyIndex == icLauncherKeyIdx || entryKeyIndex == icLauncherRoundKeyIdx || entryKeyIndex == icLauncherFgKeyIdx)) {
+                        if (isInteresting && (entryKeyIndex == icLauncherKeyIdx || entryKeyIndex == icLauncherRoundKeyIdx || entryKeyIndex == icLauncherFgKeyIdx || entryKeyIndex == icLauncherMonoKeyIdx)) {
                             val keyName = if (entryKeyIndex >= 0 && entryKeyIndex < keyStrings.size) keyStrings[entryKeyIndex] else "?"
                             val pathStr = if (valueType == 0x03 && valueData >= 0 && valueData < globalStrings.size) globalStrings[valueData] else "N/A"
                             AppLogger.d(TAG, "  Entry $entryIdx: keyIndex=$entryKeyIndex('$keyName'), valueType=0x${valueType.toString(16)}, valueData=$valueData, path='$pathStr'")
@@ -438,6 +439,7 @@ class ArscRebuilder {
                         val oldPath = globalStrings[globalStrIdx]
                         val kind = when {
                             typeId == drawableTypeId && entryKeyIndex == icLauncherFgKeyIdx -> LauncherIconKind.FOREGROUND
+                            typeId == drawableTypeId && entryKeyIndex == icLauncherMonoKeyIdx -> LauncherIconKind.MONOCHROME
                             typeId == mipmapTypeId && entryKeyIndex == icLauncherKeyIdx -> LauncherIconKind.LAUNCHER
                             typeId == mipmapTypeId && entryKeyIndex == icLauncherRoundKeyIdx -> LauncherIconKind.ROUND
                             else -> null
