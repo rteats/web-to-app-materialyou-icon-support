@@ -16,10 +16,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.ArrayDeque
 import java.util.UUID
-import kotlin.math.abs
-import kotlin.math.cos
 import kotlin.math.hypot
-import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.math.tan
 import org.xmlpull.v1.XmlPullParser
@@ -34,7 +31,8 @@ import org.xmlpull.v1.XmlPullParser
  */
 internal object MonochromeIconProcessor {
     private const val MAX_SVG_BYTES = 1024 * 1024
-    private const val SAFE_ZONE_DP = 72f
+    // Android's monochrome artwork guideline limits the logo to the inner 66x66 dp.
+    private const val SAFE_ZONE_DP = 66f
     private const val ADAPTIVE_ICON_DP = 108f
     private const val SOFT_THRESHOLD_HALF_WIDTH = 10
 
