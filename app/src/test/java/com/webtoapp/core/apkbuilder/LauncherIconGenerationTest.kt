@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
+import com.webtoapp.data.model.MonochromeIconConfig
 import java.io.File
 import java.util.zip.ZipFile
 import kotlinx.coroutines.runBlocking
@@ -154,6 +155,52 @@ class LauncherIconGenerationTest {
         assertThat(decoded.getPixel(2, 2) ushr 24).isEqualTo(0)
     }
 
+    // --- Android 13+ themed icon mask ---
+
+    @Test
+    fun `automatic monochrome mask removes an opaque favicon background`() {
+        val favicon = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888)
+        favicon.eraseColor(Color.WHITE)
+        for (y in 25 until 75) {
+            for (x in 25 until 75) favicon.setPixel(x, y, Color.BLACK)
+        }
+
+        val mask = MonochromeIconProcessor.createAutoMask(
+            source = favicon,
+            size = 432,
+            threshold = 64,
+            invert = false
+        )
+
+        assertThat(Color.alpha(mask.getPixel(216, 216))).isGreaterThan(240)
+        assertThat(Color.alpha(mask.getPixel(100, 100))).isEqualTo(0)
+        assertThat(Color.alpha(mask.getPixel(20, 20))).isEqualTo(0)
+    }
+
+    @Test
+    fun `custom svg is parsed and rendered as a safe-zone monochrome mask`() {
+        val svg = temp.newFile("mono.svg")
+        svg.writeText(
+            """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <g transform="translate(5 5)">
+                    <path d="M15 15 H75 V75 H15 Z"/>
+                </g>
+            </svg>""".trimIndent()
+        )
+
+        val png = MonochromeIconProcessor.createMonochromePng(
+            source = transparentLogo(Color.BLACK),
+            config = MonochromeIconConfig(svgPath = svg.absolutePath),
+            size = 432
+        )
+        val mask = BitmapFactory.decodeByteArray(png, 0, png.size)
+
+        assertThat(mask.width).isEqualTo(432)
+        assertThat(mask.height).isEqualTo(432)
+        assertThat(Color.alpha(mask.getPixel(216, 216))).isGreaterThan(240)
+        assertThat(Color.alpha(mask.getPixel(50, 50))).isEqualTo(0)
+    }
+
     // --- full pipeline against the real shell template ---
 
     @Test
@@ -200,6 +247,7 @@ class LauncherIconGenerationTest {
         }
 
         assertThat(specs.filter { it.kind == ArscRebuilder.LauncherIconKind.FOREGROUND }).isNotEmpty()
+        assertThat(specs.filter { it.kind == ArscRebuilder.LauncherIconKind.MONOCHROME }).isNotEmpty()
         assertThat(specs.filter { it.kind == ArscRebuilder.LauncherIconKind.LAUNCHER }).isNotEmpty()
         assertThat(specs.filter { it.kind == ArscRebuilder.LauncherIconKind.ROUND }).isNotEmpty()
 
@@ -228,6 +276,12 @@ class LauncherIconGenerationTest {
                         assertThat(bitmap.height).isEqualTo(432)
                         val bounds = opaqueBounds(bitmap)
                         assertThat(bounds.width().toFloat() / bounds.height()).isWithin(0.25f).of(2f)
+                    }
+                    ArscRebuilder.LauncherIconKind.MONOCHROME -> {
+                        assertThat(bitmap.width).isEqualTo(432)
+                        assertThat(bitmap.height).isEqualTo(432)
+                        assertThat(Color.alpha(bitmap.getPixel(0, 0))).isEqualTo(0)
+                        assertThat(opaqueBounds(bitmap).width()).isGreaterThan(0)
                     }
                     ArscRebuilder.LauncherIconKind.LAUNCHER,
                     ArscRebuilder.LauncherIconKind.ROUND -> {
